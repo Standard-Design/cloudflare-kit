@@ -18,6 +18,14 @@
 			"types": "./dist/env.d.ts",
 			"import": "./dist/env.js"
 		},
+		"./kv": {
+			"types": "./dist/kv.d.ts",
+			"import": "./dist/kv.js"
+		},
+		"./kv-cache": {
+			"types": "./dist/kv-cache.d.ts",
+			"import": "./dist/kv-cache.js"
+		},
 		"./types": {
 			"types": "./dist/types.d.ts",
 			"import": "./dist/types.js"
