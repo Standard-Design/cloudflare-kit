@@ -1,0 +1,7 @@
+dist/
+node_modules/
+*.tgz
+.eslintcache
+.DS_Store
+coverage/
+test/fixtures/worker/worker-configuration.d.ts
