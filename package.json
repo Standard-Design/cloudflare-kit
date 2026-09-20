@@ -18,6 +18,10 @@
 			"types": "./dist/env.d.ts",
 			"import": "./dist/env.js"
 		},
+		"./http-cache": {
+			"types": "./dist/http-cache/index.d.ts",
+			"import": "./dist/http-cache/index.js"
+		},
 		"./kv": {
 			"types": "./dist/kv.d.ts",
 			"import": "./dist/kv.js"

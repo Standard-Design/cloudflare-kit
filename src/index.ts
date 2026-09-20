@@ -5,6 +5,7 @@ export {
 	MissingBindingError,
 } from './errors.js'
 export { createEnvironment, type EnvironmentReader } from './env.js'
+export * from './http-cache/index.js'
 export {
 	createKvCache,
 	type CacheLookup,
