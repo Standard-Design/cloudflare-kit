@@ -1,9 +1,30 @@
+// Consumers can merge their generated Worker Env into this interface once so
+// the request-global accessors remain typed throughout the application.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface CloudflareKitBindings {}
+
 export {
+	CloudflareKitContextError,
 	CloudflareKitError,
 	InvalidCacheEntryError,
 	InvalidTtlError,
 	MissingBindingError,
 } from './errors.js'
+export {
+	bindings,
+	cache,
+	createCloudflareKit,
+	env,
+	getCloudflareKit,
+	kv,
+	request,
+	runWithCloudflareKit,
+	waitUntil,
+	type CloudflareKitCallback,
+	type CloudflareKitContext,
+	type CreateCloudflareKitOptions,
+	type KvBindingKey,
+} from './context.js'
 export { createEnvironment, type EnvironmentReader } from './env.js'
 export * from './http-cache/index.js'
 export {

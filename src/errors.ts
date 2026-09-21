@@ -10,6 +10,18 @@ export class MissingBindingError extends CloudflareKitError {
 	}
 }
 
+export class CloudflareKitContextError extends CloudflareKitError {
+	override name = 'CloudflareKitContextError'
+
+	constructor(capability?: string) {
+		super(
+			capability
+				? `Cloudflare Kit ${capability} is unavailable outside an active runWithCloudflareKit() scope.`
+				: 'Cloudflare Kit context is unavailable outside an active runWithCloudflareKit() scope.',
+		)
+	}
+}
+
 export class InvalidTtlError extends CloudflareKitError {
 	override name = 'InvalidTtlError'
 
