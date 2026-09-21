@@ -1,0 +1,14 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"baseUrl": "../..",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"noEmit": true,
+		"paths": {
+			"@standard/cloudflare-kit": ["./src/index.ts"]
+		},
+		"types": ["@cloudflare/workers-types", "node"]
+	},
+	"include": ["./public-api.test.ts", "../../src/**/*.ts"]
+}
