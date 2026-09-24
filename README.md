@@ -9,6 +9,27 @@ ergonomic goal—importing request-scoped capabilities wherever server code need
 them—while adding explicit factories, inferred binding types, conservative HTTP
 cache policy, and Workers-runtime tests.
 
+## Table of contents
+
+- [Status and installation](#status-and-installation)
+- [Requirements](#requirements)
+- [Request context](#request-context)
+  - [Type global accessors once](#type-global-accessors-once)
+  - [Explicit construction and dependency injection](#explicit-construction-and-dependency-injection)
+- [React Router 8](#react-router-8)
+- [Workers KV](#workers-kv)
+  - [General KV access](#general-kv-access)
+  - [KV-backed data cache](#kv-backed-data-cache)
+  - [Runtime parsing and Zod](#runtime-parsing-and-zod)
+- [HTTP response caching](#http-response-caching)
+  - [Cache complete React Router HTML](#cache-complete-react-router-html)
+  - [Authenticated and private routes](#authenticated-and-private-routes)
+  - [Cache keys, variation, and invalidation](#cache-keys-variation-and-invalidation)
+- [Package entry points](#package-entry-points)
+- [Sawkill migration](#sawkill-migration)
+- [Development and verification](#development-and-verification)
+- [License](#license)
+
 ## Status and installation
 
 `0.1.0-alpha.0` is a prerelease. Use an exact packed artifact or Git tag while
