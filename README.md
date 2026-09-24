@@ -432,7 +432,22 @@ pnpm verify
 
 Verification includes Wrangler type generation, formatting, linting, strict
 package and consumer typechecks, Workers-runtime tests, production builds,
-`publint`, Are the Types Wrong analysis, and packed-consumer smoke tests.
+an `npm publish ./dist --dry-run`, `publint`, Are the Types Wrong analysis,
+tarball-content assertions, and packed-consumer smoke tests.
+
+The build assembles `dist/` as a self-contained package root containing only
+compiled JavaScript, declarations, package metadata, the README, and the
+license. Source maps are omitted so the package cannot embed TypeScript through
+`sourcesContent`.
+
+Create the prerelease artifact from that package root:
+
+```sh
+pnpm release:pack
+```
+
+Publishing the repository root is intentionally blocked. A future npm release
+must use `pnpm release:publish`, which builds and publishes `./dist` explicitly.
 
 ## License
 

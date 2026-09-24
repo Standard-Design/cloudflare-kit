@@ -7,9 +7,13 @@ import { promisify } from 'node:util'
 
 const exec = promisify(execFile)
 const projectDirectory = resolve(import.meta.dirname, '..')
+const packageDirectory = join(projectDirectory, 'dist')
 const temporaryDirectory = await mkdtemp(join(tmpdir(), 'cloudflare-kit-'))
 const sourceManifest = JSON.parse(
 	await readFile(join(projectDirectory, 'package.json'), 'utf8'),
+)
+const packageManifest = JSON.parse(
+	await readFile(join(packageDirectory, 'package.json'), 'utf8'),
 )
 
 try {
@@ -17,12 +21,13 @@ try {
 		'npm',
 		[
 			'pack',
+			packageDirectory,
 			'--json',
 			'--ignore-scripts',
 			'--pack-destination',
 			temporaryDirectory,
 		],
-		{ cwd: projectDirectory },
+		{ cwd: temporaryDirectory },
 	)
 	const packResult = JSON.parse(stdout)
 	assert.ok(Array.isArray(packResult) && packResult.length === 1)
@@ -31,7 +36,7 @@ try {
 	assert.equal(typeof filename, 'string')
 	const packedFiles = packResult[0]?.files?.map((file) => file.path)
 	assert.ok(Array.isArray(packedFiles))
-	for (const [subpath, target] of Object.entries(sourceManifest.exports)) {
+	for (const [subpath, target] of Object.entries(packageManifest.exports)) {
 		if (subpath === './package.json') continue
 		assert.equal(typeof target, 'object')
 		assert.ok(
@@ -44,10 +49,26 @@ try {
 		)
 	}
 	assert.ok(packedFiles.includes('LICENSE'))
+	assert.ok(packedFiles.includes('README.md'))
 	assert.ok(packedFiles.includes('package.json'))
-	assert.ok(!packedFiles?.some((path) => path.startsWith('src/')))
-	assert.ok(!packedFiles?.some((path) => path.startsWith('test/')))
-	assert.ok(!packedFiles?.some((path) => path.startsWith('scripts/')))
+	assert.ok(
+		packedFiles.every(
+			(path) =>
+				path === 'LICENSE' ||
+				path === 'README.md' ||
+				path === 'package.json' ||
+				path.endsWith('.js') ||
+				path.endsWith('.d.ts'),
+		),
+		`Unexpected files in package: ${packedFiles.join(', ')}`,
+	)
+	assert.ok(!packedFiles.some((path) => path.endsWith('.map')))
+	assert.equal(packageManifest.main, './index.js')
+	assert.equal(packageManifest.types, './index.d.ts')
+	assert.equal(packageManifest.scripts, undefined)
+	assert.equal(packageManifest.devDependencies, undefined)
+	assert.equal(packageManifest.files, undefined)
+	assert.equal(packageManifest.packageManager, undefined)
 	const tarball = join(temporaryDirectory, filename)
 	const consumerDirectory = join(temporaryDirectory, 'consumer')
 
