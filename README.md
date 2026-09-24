@@ -26,7 +26,7 @@ An exact Git tag also works because the package builds during Git dependency
 preparation:
 
 ```sh
-pnpm add github:Standard-Design/cfkit#v0.1.0-alpha.0
+pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.0
 ```
 
 pnpm may require the consuming project to allow that Git dependency's build in

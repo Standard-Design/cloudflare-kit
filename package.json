@@ -2,13 +2,13 @@
 	"name": "@standard/cloudflare-kit",
 	"version": "0.1.0-alpha.0",
 	"description": "Typed, framework-independent Cloudflare Workers primitives for bindings, KV, and HTTP caching.",
-	"homepage": "https://github.com/Standard-Design/cfkit#readme",
+	"homepage": "https://github.com/Standard-Design/cloudflare-kit#readme",
 	"bugs": {
-		"url": "https://github.com/Standard-Design/cfkit/issues"
+		"url": "https://github.com/Standard-Design/cloudflare-kit/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Standard-Design/cfkit.git"
+		"url": "git+https://github.com/Standard-Design/cloudflare-kit.git"
 	},
 	"license": "MIT",
 	"type": "module",
