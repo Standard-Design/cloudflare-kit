@@ -1,27 +1,49 @@
 # Packaging, releases, and verification
 
 The package name is `@standard/cloudflare-kit`; the repository is
-`Standard-Design/cloudflare-kit`. Runtime APIs described here match alpha.0.
-Expanded guides and API comments are later documentation work: installing the
-existing `v0.1.0-alpha.0` asset will not install these new files. No tag, version,
-or release asset is changed by editing these guides.
+`Standard-Design/cloudflare-kit`. Version `0.1.0-alpha.1` is being prepared;
+its tag and release assets have not been published. Runtime APIs are unchanged
+from alpha.0, so consumers do not need an API migration.
+
+## Alpha.1 release scope
+
+This prerelease packages the documentation and release-tooling work since alpha.0:
+
+- A documentation index and nine subsystem guides covering context, dependency
+  injection, bindings, KV, data and response caching, React Router, troubleshooting,
+  and releases.
+- Expanded public API comments preserved in declarations for editor hover help.
+- Guide inclusion and packed-consumer checks for file contents, Markdown links,
+  declaration comments, and typed examples.
+- Repository URLs updated to `Standard-Design/cloudflare-kit`, README navigation,
+  and the explicit npm `alpha` tag required by the publish dry run.
+
+No runtime behavior, exported signatures, or runtime dependencies change.
+The original `v0.1.0-alpha.0` tag and assets must remain unchanged. Installing
+that older artifact will not install these guides or expanded declaration comments.
 
 ## Install a reviewed artifact
 
-The initial distribution is a GitHub prerelease, not an npm registry release.
+Distribution remains a GitHub prerelease, not an npm registry release.
 For a private repository, download the asset through authenticated GitHub access,
 verify its checksum, then install a local file. Do not put credentials in a
 dependency URL or assume private release URLs allow anonymous package fetches.
+The commands below target alpha.1 after its release is approved and published;
+they will not work before the tag and assets exist. Until then, alpha.0 remains
+the available release.
 
 ```sh
-gh release download v0.1.0-alpha.0 --repo Standard-Design/cloudflare-kit \
-  --pattern 'standard-cloudflare-kit-0.1.0-alpha.0.tgz*'
-shasum -a 256 -c standard-cloudflare-kit-0.1.0-alpha.0.tgz.sha256
-pnpm add ./standard-cloudflare-kit-0.1.0-alpha.0.tgz
+gh release download v0.1.0-alpha.1 --repo Standard-Design/cloudflare-kit \
+  --pattern 'standard-cloudflare-kit-0.1.0-alpha.1.tgz*'
+shasum -a 256 -c standard-cloudflare-kit-0.1.0-alpha.1.tgz.sha256
+pnpm add ./standard-cloudflare-kit-0.1.0-alpha.1.tgz
 ```
 
 The original alpha.0 tarball SHA-256 is
 `edef3f5bfe5676fe4eddbf54869eacf37752da21edaed1cc30a82377c1a308f8`.
+That is not the alpha.1 checksum. Calculate the new checksum from the approved
+release build and attach its `.sha256` file alongside the new tarball; do not
+reuse the old checksum or a verification-only build as release evidence.
 Keep the artifact accessible to teammates/CI and commit the consumer lockfile.
 The tarball has compiled code and no installation scripts.
 
@@ -29,7 +51,7 @@ An exact Git dependency remains supported by CFKit's repository `prepare`
 script, unlike some other Standard packages:
 
 ```sh
-pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.0
+pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.1
 ```
 
 It requires repository access, development build tools, and possibly the

@@ -1,9 +1,9 @@
 # Documentation
 
 These guides describe the current `@standard/cloudflare-kit` implementation.
-The runtime API is still `0.1.0-alpha.0`. This expanded documentation and hover
-help are being prepared after that release; the existing alpha.0 tarball has
-not been replaced and does not contain these guides.
+Version `0.1.0-alpha.1` is being prepared with the same runtime API as alpha.0.
+Alpha.1 builds include these guides and expanded editor hover documentation.
+The existing alpha.0 tarball remains unchanged and does not contain these guides.
 
 ## Recommended reading order
 

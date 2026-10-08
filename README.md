@@ -11,9 +11,9 @@ cache policy, and Workers-runtime tests.
 
 For the full explanation, start with the [documentation index](docs/README.md).
 It includes a recommended reading order, shared terminology, subsystem guides,
-and application ownership and verification boundaries. These expanded guides
-and API comments are post-alpha.0 documentation; the existing released tarball
-has not been replaced.
+and application ownership and verification boundaries. The expanded guides
+and API comments are included in alpha.1 builds; the original alpha.0 release
+remains unchanged.
 
 ## Table of contents
 
@@ -38,7 +38,9 @@ has not been replaced.
 
 ## Status and installation
 
-`0.1.0-alpha.0` is a prerelease. Use an exact packed artifact or Git tag while
+`0.1.0-alpha.1` is the next prerelease being prepared, not yet a published
+artifact. The commands below target it once released; until then, use the
+existing alpha.0 release. Use an exact packed artifact or Git tag while
 the package is being integrated into Standard Stack. Do not use a floating
 branch as a dependency.
 
@@ -46,7 +48,7 @@ The packed tarball is the simplest initial integration artifact because it
 contains compiled output and does not run dependency build scripts:
 
 ```sh
-pnpm add ./standard-cloudflare-kit-0.1.0-alpha.0.tgz
+pnpm add ./standard-cloudflare-kit-0.1.0-alpha.1.tgz
 ```
 
 For this private repository, download release assets through authenticated
@@ -56,7 +58,7 @@ An exact Git tag also works because the package builds during Git dependency
 preparation:
 
 ```sh
-pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.0
+pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.1
 ```
 
 pnpm may require the consuming project to allow that Git dependency's build in
