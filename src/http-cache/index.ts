@@ -1,3 +1,4 @@
+/** Response caching and policy primitives; no KV backend or automatic app integration. @see docs/http-cache.md */
 export {
 	getCacheTtlSeconds,
 	hasAnyDirective,

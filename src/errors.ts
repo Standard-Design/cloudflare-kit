@@ -1,7 +1,11 @@
+/** Package errors are not HTTP responses and are not automatically redacted. @see docs/troubleshooting.md */
+
+/** Base class for kit-specific errors; native/parser/storage errors may have other types. */
 export class CloudflareKitError extends Error {
 	override name = 'CloudflareKitError'
 }
 
+/** Required binding is undefined; the message contains its name, not its value. */
 export class MissingBindingError extends CloudflareKitError {
 	override name = 'MissingBindingError'
 
@@ -10,6 +14,7 @@ export class MissingBindingError extends CloudflareKitError {
 	}
 }
 
+/** No active scope, or a requested capability (such as request) was not supplied. */
 export class CloudflareKitContextError extends CloudflareKitError {
 	override name = 'CloudflareKitContextError'
 
@@ -22,6 +27,7 @@ export class CloudflareKitContextError extends CloudflareKitError {
 	}
 }
 
+/** KV TTL is not an integer >= 60 seconds; HTTP fallback TTL uses different rules. */
 export class InvalidTtlError extends CloudflareKitError {
 	override name = 'InvalidTtlError'
 
@@ -32,6 +38,7 @@ export class InvalidTtlError extends CloudflareKitError {
 	}
 }
 
+/** KV value is not a supported cache envelope; the message contains its physical key. */
 export class InvalidCacheEntryError extends CloudflareKitError {
 	override name = 'InvalidCacheEntryError'
 

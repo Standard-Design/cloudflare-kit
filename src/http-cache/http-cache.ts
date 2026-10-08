@@ -1,3 +1,4 @@
+/** Response orchestration only; applications own private-route/preview classification. @see docs/http-cache.md */
 import { getCacheTtlSeconds, parseCacheControl } from './cache-control.js'
 import { shouldBypassHttpCacheRead, shouldWriteHttpCache } from './guards.js'
 import { resolveHttpCachePolicy } from './policy.js'
@@ -17,6 +18,8 @@ function prepareResponseForCache(
 
 	if (configuredTtl !== null) return response.clone()
 
+	// Only the stored copy gets the fallback header; the origin response remains
+	// untouched. A later hit can therefore carry different cache headers than a miss.
 	const cachedResponse = response.clone()
 	const headers = new Headers(cachedResponse.headers)
 	headers.set('Cache-Control', `public, s-maxage=${String(ttlSeconds)}`)
@@ -27,6 +30,12 @@ function prepareResponseForCache(
 	})
 }
 
+/**
+ * Returns a cache hit or calls handler and schedules an eligible response clone.
+ * Writes use waitUntil; KV getOrSet writes, by contrast, are awaited.
+ * Read/handler/key/clone failures propagate; asynchronous put failures belong to
+ * the background promise. No retry, stale fallback, or request coalescing is added.
+ */
 export async function withHttpCache({
 	cache,
 	context,
@@ -41,6 +50,8 @@ export async function withHttpCache({
 
 	if (!shouldBypassHttpCacheRead(request, policy)) {
 		const cachedResponse = await cache.match(resolvedCacheKey)
+		// No handler execution means new origin privacy headers cannot protect an
+		// old entry. Classify private routes before entering this wrapper.
 		if (cachedResponse) return cachedResponse
 	}
 
@@ -53,10 +64,13 @@ export async function withHttpCache({
 	)
 	if (!responseForCache) return response
 
+	// Clone before returning so caching can consume its own body stream. The
+	// runtime owns the pending promise; this is not a durable queue or success ack.
 	context.waitUntil(cache.put(resolvedCacheKey, responseForCache))
 	return response
 }
 
+/** Deletes one normalized response key; no guard checks, KV eviction, or global purge. */
 export async function deleteHttpCacheEntry({
 	cache,
 	policy: inputPolicy,

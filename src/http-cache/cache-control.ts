@@ -1,5 +1,13 @@
+/** Simple cache-directive parsing used by policy guards and TTL selection. @see docs/http-cache.md */
+
+/** Lowercase names mapped to string values or true for bare directives. */
 export type CacheControlDirectives = ReadonlyMap<string, string | true>
 
+/**
+ * Splits on commas, trims values, and removes surrounding value quotes.
+ * Last duplicate wins; missing/empty input yields an empty map. This is not a
+ * complete HTTP quoted-string parser (quoted commas are not specially handled).
+ */
 export function parseCacheControl(
 	headerValue: string | null,
 ): CacheControlDirectives {
@@ -28,6 +36,7 @@ export function parseCacheControl(
 	return directives
 }
 
+/** Tests presence of any name case-insensitively; directive values do not affect blocking. */
 export function hasAnyDirective(
 	directives: CacheControlDirectives,
 	names: Iterable<string>,
@@ -44,6 +53,7 @@ function parseSeconds(value: string | true | undefined): number | null {
 	return Number.isSafeInteger(seconds) ? seconds : null
 }
 
+/** Selects valid integer s-maxage, then max-age; returns null if neither is valid, not zero. */
 export function getCacheTtlSeconds(
 	directives: CacheControlDirectives,
 ): number | null {

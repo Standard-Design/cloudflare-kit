@@ -1,3 +1,4 @@
+/** Eligibility checks shared by response-cache reads/writes. @see docs/http-cache.md */
 import { hasAnyDirective, parseCacheControl } from './cache-control.js'
 import type { ResolvedHttpCachePolicy } from './types.js'
 
@@ -17,6 +18,8 @@ function responseVaryIsSafe(
 		.map((field) => field.trim().toLowerCase())
 		.filter(Boolean)
 
+	// Approval only permits a write. It does not add these header values to a
+	// cache key; callers must ensure their backend/key actually separates variants.
 	return fields.every(
 		(field) => field !== '*' && policy.allowedVaryHeaders.has(field),
 	)
@@ -53,6 +56,7 @@ function requestHasBlockingCacheDirective(
 	)
 }
 
+/** Checks request eligibility and, by default, request cache directives/Pragma. */
 export function shouldBypassHttpCacheRead(
 	request: Request,
 	policy: ResolvedHttpCachePolicy,
@@ -62,6 +66,11 @@ export function shouldBypassHttpCacheRead(
 	return requestHasBlockingCacheDirective(request, policy)
 }
 
+/**
+ * Checks request/response eligibility. Does not check the selected TTL or prove
+ * that the cache backend will accept/store the response. Request blockers always
+ * apply to writes, even when bypassReadOnRequestNoCache is disabled.
+ */
 export function shouldWriteHttpCache(
 	request: Request,
 	response: Response,

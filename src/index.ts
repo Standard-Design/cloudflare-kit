@@ -1,5 +1,13 @@
-// Consumers can merge their generated Worker Env into this interface once so
-// the request-global accessors remain typed throughout the application.
+/**
+ * Server-side Cloudflare helpers. Use subpaths for narrower dependencies.
+ * @see docs/README.md
+ */
+
+/**
+ * Augment this interface with your generated Worker Env once to type global
+ * accessors. Augmentation describes bindings; it does not provision or validate them.
+ * @see docs/environment.md
+ */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface CloudflareKitBindings {}
 

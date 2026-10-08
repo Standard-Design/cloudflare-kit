@@ -1,3 +1,4 @@
+/** Conservative defaults for shared response caching. @see docs/http-cache.md */
 import { createHttpCacheKeyFactory } from './cache-key.js'
 import type { HttpCachePolicy, ResolvedHttpCachePolicy } from './types.js'
 
@@ -10,6 +11,11 @@ function lowercaseSet(values: readonly string[]): ReadonlySet<string> {
 	return new Set(values.map((value) => value.toLowerCase()))
 }
 
+/**
+ * Applies defaults and normalizes method/header/directive sets. Lists replace
+ * defaults rather than extending them; custom createCacheKey overrides stripping.
+ * @throws TypeError for a negative, fractional, or unsafe fallback TTL.
+ */
 export function resolveHttpCachePolicy(
 	policy: HttpCachePolicy = {},
 ): ResolvedHttpCachePolicy {

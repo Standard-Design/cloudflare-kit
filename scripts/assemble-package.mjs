@@ -1,4 +1,4 @@
-import { copyFile, readFile, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 
 const projectDirectory = resolve(import.meta.dirname, '..')
@@ -42,6 +42,22 @@ await Promise.all(
 			join(packageDirectory, filename),
 		),
 	),
+)
+// Copy only guide Markdown, never an arbitrary directory tree that could later
+// acquire sources, examples, or private artifacts.
+await mkdir(join(packageDirectory, 'docs'), { recursive: true })
+const guides = await readdir(join(projectDirectory, 'docs'), {
+	withFileTypes: true,
+})
+await Promise.all(
+	guides
+		.filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+		.map((entry) =>
+			copyFile(
+				join(projectDirectory, 'docs', entry.name),
+				join(packageDirectory, 'docs', entry.name),
+			),
+		),
 )
 await writeFile(
 	join(packageDirectory, 'package.json'),
