@@ -9,6 +9,12 @@ ergonomic goal—importing request-scoped capabilities wherever server code need
 them—while adding explicit factories, inferred binding types, conservative HTTP
 cache policy, and Workers-runtime tests.
 
+For the full explanation, start with the [documentation index](docs/README.md).
+It includes a recommended reading order, shared terminology, subsystem guides,
+and application ownership and verification boundaries. These expanded guides
+and API comments are post-alpha.0 documentation; the existing released tarball
+has not been replaced.
+
 ## Table of contents
 
 - [Status and installation](#status-and-installation)
@@ -42,6 +48,9 @@ contains compiled output and does not run dependency build scripts:
 ```sh
 pnpm add ./standard-cloudflare-kit-0.1.0-alpha.0.tgz
 ```
+
+For this private repository, download release assets through authenticated
+GitHub access first. See [installation and checksum verification](docs/prerelease.md#install-a-reviewed-artifact).
 
 An exact Git tag also works because the package builds during Git dependency
 preparation:
@@ -385,19 +394,32 @@ prevents an earlier public entry from being read.
 ### Cache keys, variation, and invalidation
 
 Default keys strip `utm_*`, `fbclid`, `gclid`, and `msclkid`, then sort remaining
-query parameters. Additional parameters can be configured with
-`stripQueryParameters`.
+query parameters. A custom `stripQueryParameters` list replaces those defaults;
+use an empty list to preserve every parameter.
 
-Approve content-negotiation dimensions explicitly:
+Approve content-negotiation dimensions and encode them in the key. The Vary
+allowlist alone does not construct separate variants. For an application whose
+response varies by a validated language selection:
 
 ```ts
 await cloudflare.withHttpCache({
 	cache: caches.default,
 	handler,
-	policy: { allowedVaryHeaders: ['accept'] },
+	policy: {
+		allowedVaryHeaders: ['accept-language'],
+		createCacheKey(input) {
+			const url = new URL(input.url)
+			url.searchParams.set('__cfkit_language', selectedLanguage)
+			return new Request(url, { method: 'GET', headers: input.headers })
+		},
+	},
 	request,
 })
 ```
+
+`selectedLanguage` and `handler` are application-owned and must use the same
+language choice. See [keys, variation, and isolation](docs/http-cache.md#keys-variation-and-isolation)
+for a complete example and environment separation.
 
 Delete a response using the same normalized policy and request:
 
@@ -457,9 +479,11 @@ an `npm publish ./dist --dry-run --tag alpha`, `publint`, Are the Types Wrong an
 tarball-content assertions, and packed-consumer smoke tests.
 
 The build assembles `dist/` as a self-contained package root containing only
-compiled JavaScript, declarations, package metadata, the README, and the
-license. Source maps are omitted so the package cannot embed TypeScript through
-`sourcesContent`.
+compiled JavaScript, declarations with API comments, package metadata, the
+README, the license, and the Markdown guides in `docs/`. Source maps are omitted
+so the package cannot embed TypeScript through `sourcesContent`. See
+[packaging and verification](docs/prerelease.md) for the release sequence and
+the limits of the automated checks.
 
 Create the prerelease artifact from that package root:
 
