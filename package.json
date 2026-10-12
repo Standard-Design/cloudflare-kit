@@ -1,6 +1,6 @@
 {
-	"name": "@standard/cloudflare-kit",
-	"version": "0.1.0-alpha.1",
+	"name": "@standard-design/cloudflare-kit",
+	"version": "0.1.0-alpha.2",
 	"description": "Typed, framework-independent Cloudflare Workers primitives for bindings, KV, and HTTP caching.",
 	"homepage": "https://github.com/Standard-Design/cloudflare-kit#readme",
 	"bugs": {
@@ -11,12 +11,18 @@
 		"url": "git+https://github.com/Standard-Design/cloudflare-kit.git"
 	},
 	"license": "MIT",
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/",
+		"tag": "alpha"
+	},
 	"type": "module",
 	"sideEffects": false,
 	"files": [
 		"dist",
 		"LICENSE",
-		"README.md"
+		"README.md",
+		"THIRD_PARTY_NOTICES.md"
 	],
 	"exports": {
 		".": {
@@ -63,11 +69,11 @@
 		"format:fix": "prettier --write .",
 		"lint": "eslint .",
 		"pack:test": "pnpm build && node scripts/test-packed-package.mjs",
-		"package:check": "pnpm build && npm publish ./dist --dry-run --tag alpha && publint ./dist && attw --pack ./dist --profile esm-only",
+		"package:check": "pnpm build && npm publish ./dist --dry-run --access public --tag alpha && publint ./dist && attw --pack ./dist --profile esm-only",
 		"prepare": "npm run build",
 		"prepublishOnly": "node scripts/guard-root-publish.mjs",
 		"release:pack": "pnpm build && npm pack ./dist",
-		"release:publish": "pnpm build && npm publish ./dist --tag alpha",
+		"release:publish": "pnpm build && npm publish ./dist --access public --tag alpha",
 		"test": "vitest run",
 		"test:types": "tsc -p test/types/tsconfig.json",
 		"typecheck": "tsc -p tsconfig.json && tsc -p test/types/tsconfig.json",

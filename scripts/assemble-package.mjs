@@ -36,7 +36,7 @@ delete packageManifest.packageManager
 delete packageManifest.scripts
 
 await Promise.all(
-	['LICENSE', 'README.md'].map((filename) =>
+	['LICENSE', 'README.md', 'THIRD_PARTY_NOTICES.md'].map((filename) =>
 		copyFile(
 			join(projectDirectory, filename),
 			join(packageDirectory, filename),

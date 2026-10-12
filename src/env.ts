@@ -1,4 +1,5 @@
 /** Typed access to application-supplied bindings, not process.env. @see docs/environment.md */
+/** EdgeKit-derived lineage via Sawkill; see THIRD_PARTY_NOTICES.md. */
 import { MissingBindingError } from './errors.js'
 
 /** Reads original bindings without schema validation, coercion, or secret filtering. */

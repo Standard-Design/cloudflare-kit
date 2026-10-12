@@ -1,8 +1,13 @@
 # Documentation
 
-These guides describe the current `@standard/cloudflare-kit` implementation.
-Version `0.1.0-alpha.1` is being prepared with the same runtime API as alpha.0.
-Alpha.1 builds include these guides and expanded editor hover documentation.
+These guides describe the current `@standard-design/cloudflare-kit` implementation.
+Version `0.1.0-alpha.2` adopts the `@standard-design` scope, corrects the MIT
+copyright holder to Standard Design LLC, and includes third-party notices.
+Its runtime API matches the historical `@standard/cloudflare-kit` alpha.0 and
+alpha.1 releases, but imports and module augmentation must use the new name.
+These guides and expanded
+editor hover documentation were introduced in alpha.1. See the
+[release guide](prerelease.md) for artifact availability and version history.
 The existing alpha.0 tarball remains unchanged and does not contain these guides.
 
 ## Recommended reading order
@@ -72,6 +77,7 @@ states what the application supplies. Examples use fictional content and hosts.
 
 Source and test paths are repository-relative references to this revision.
 They are intentionally plain paths: source and tests are not shipped in the
-compiled package. Public declarations, README, LICENSE, and these guides are
+compiled package. Public declarations, README, LICENSE,
+[third-party notices](../THIRD_PARTY_NOTICES.md), and these guides are
 included in new builds. See the [package overview](../README.md) for a shorter
 tour and the [verification limits](prerelease.md#what-verification-proves).

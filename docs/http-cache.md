@@ -1,6 +1,6 @@
 # HTTP response caching
 
-Import from `@standard/cloudflare-kit/http-cache`, or use
+Import from `@standard-design/cloudflare-kit/http-cache`, or use
 `kit.withHttpCache()` inside a scoped or explicit kit. This helper caches a
 complete `Response`: status, headers, and body, which may be HTML or data. The
 application supplies a Cache API object. No KV binding is required, and
@@ -13,7 +13,7 @@ import {
 	withHttpCache,
 	type CacheStorageLike,
 	type WaitUntilContext,
-} from '@standard/cloudflare-kit/http-cache'
+} from '@standard-design/cloudflare-kit/http-cache'
 
 export function servePublicPage(
 	request: Request,
@@ -109,7 +109,7 @@ previously stored public response from being read when route policy changes:
 import {
 	withHttpCache,
 	type WithHttpCacheOptions,
-} from '@standard/cloudflare-kit/http-cache'
+} from '@standard-design/cloudflare-kit/http-cache'
 
 export async function serve(options: WithHttpCacheOptions, preview: boolean) {
 	const path = new URL(options.request.url).pathname
@@ -151,7 +151,7 @@ import {
 	withHttpCache,
 	type CacheStorageLike,
 	type WaitUntilContext,
-} from '@standard/cloudflare-kit/http-cache'
+} from '@standard-design/cloudflare-kit/http-cache'
 
 export function serveLocalized(
 	request: Request,

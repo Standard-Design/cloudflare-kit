@@ -23,7 +23,7 @@ codes, HTTP status mappings, or automatic redaction. Parser exceptions and
 platform failures are not necessarily `CloudflareKitError` instances.
 
 ```ts
-import { CloudflareKitError } from '@standard/cloudflare-kit'
+import { CloudflareKitError } from '@standard-design/cloudflare-kit'
 
 export async function serveSafely(
 	work: () => Promise<Response>,
@@ -81,7 +81,7 @@ does not prove that its background cache write completed or that the platform
 stored it. Record failures in a supplied context wrapper if needed:
 
 ```ts
-import type { WaitUntilContext } from '@standard/cloudflare-kit/http-cache'
+import type { WaitUntilContext } from '@standard-design/cloudflare-kit/http-cache'
 
 export function observeBackgroundWork(
 	ctx: WaitUntilContext,

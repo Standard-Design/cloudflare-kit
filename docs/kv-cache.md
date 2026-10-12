@@ -9,8 +9,8 @@ when the reusable result is an entire response.
 ## Cache a value
 
 ```ts
-import { createKvCache } from '@standard/cloudflare-kit/kv-cache'
-import type { KvNamespaceLike } from '@standard/cloudflare-kit/kv'
+import { createKvCache } from '@standard-design/cloudflare-kit/kv-cache'
+import type { KvNamespaceLike } from '@standard-design/cloudflare-kit/kv'
 
 export async function getProductCount(
 	namespace: KvNamespaceLike,
@@ -47,8 +47,8 @@ Each value is stored inside `{ version: 1, value }`. A missing KV entry returns
 cached `null`, `false`, `0`, and `''`. Test `hit`, never value truthiness:
 
 ```ts
-import { createKvCache } from '@standard/cloudflare-kit/kv-cache'
-import type { KvNamespaceLike } from '@standard/cloudflare-kit/kv'
+import { createKvCache } from '@standard-design/cloudflare-kit/kv-cache'
+import type { KvNamespaceLike } from '@standard-design/cloudflare-kit/kv'
 
 export async function readCachedNull(namespace: KvNamespaceLike) {
 	const dataCache = createKvCache(namespace)
@@ -90,8 +90,8 @@ the loader as well if you want both paths checked. Keep read and fresh values
 compatible and avoid repeatedly transforming already-transformed data.
 
 ```ts
-import { createKvCache } from '@standard/cloudflare-kit/kv-cache'
-import type { KvNamespaceLike } from '@standard/cloudflare-kit/kv'
+import { createKvCache } from '@standard-design/cloudflare-kit/kv-cache'
+import type { KvNamespaceLike } from '@standard-design/cloudflare-kit/kv'
 
 function parseCount(input: unknown): number {
 	if (typeof input !== 'number' || !Number.isInteger(input) || input < 0) {

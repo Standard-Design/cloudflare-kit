@@ -1,4 +1,5 @@
 /** Shared JSON and parser contracts. Runtime validation remains app-owned. @see docs/kv-cache.md */
+/** JSON declaration lineage: Type-Fest via Sawkill; see THIRD_PARTY_NOTICES.md. */
 
 /** JSON scalar type; callers must still avoid non-finite numbers at runtime. */
 export type JsonPrimitive = boolean | null | number | string

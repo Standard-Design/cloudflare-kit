@@ -12,9 +12,9 @@ application declaration file included by TypeScript, augment CFKit once:
 
 ```ts illustrative
 // app/cloudflare.d.ts; Env comes from this application's Wrangler type generation.
-import '@standard/cloudflare-kit'
+import '@standard-design/cloudflare-kit'
 
-declare module '@standard/cloudflare-kit' {
+declare module '@standard-design/cloudflare-kit' {
 	interface CloudflareKitBindings extends Env {}
 }
 ```
@@ -28,7 +28,7 @@ types into the same interface; isolate projects or prefer explicit types.
 ## Reading values
 
 ```ts
-import { createEnvironment } from '@standard/cloudflare-kit/env'
+import { createEnvironment } from '@standard-design/cloudflare-kit/env'
 
 const environment = createEnvironment<{
 	NAME: string

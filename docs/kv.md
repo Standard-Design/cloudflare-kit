@@ -1,6 +1,6 @@
 # General Workers KV access
 
-Import `createKvStore` from `@standard/cloudflare-kit/kv`, or call `kv()` inside
+Import `createKvStore` from `@standard-design/cloudflare-kit/kv`, or call `kv()` inside
 a request scope. This wrapper stores JSON with caller-chosen keys. Use it for
 application-managed values; use [KV data caching](kv-cache.md) when you want
 automatic load-on-miss behavior and explicit hit/miss results.
@@ -11,7 +11,7 @@ automatic load-on-miss behavior and explicit hit/miss results.
 import {
 	createKvStore,
 	type KvNamespaceLike,
-} from '@standard/cloudflare-kit/kv'
+} from '@standard-design/cloudflare-kit/kv'
 
 export async function updateSettings(namespace: KvNamespaceLike) {
 	const store = createKvStore(namespace)
@@ -80,7 +80,7 @@ that ambiguity in a single cache read.
 import {
 	createKvStore,
 	type KvNamespaceLike,
-} from '@standard/cloudflare-kit/kv'
+} from '@standard-design/cloudflare-kit/kv'
 
 export async function listSettingKeys(namespace: KvNamespaceLike) {
 	const store = createKvStore(namespace)

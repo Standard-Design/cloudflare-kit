@@ -6,7 +6,7 @@
 		"moduleResolution": "Bundler",
 		"noEmit": true,
 		"paths": {
-			"@standard/cloudflare-kit": ["./src/index.ts"]
+			"@standard-design/cloudflare-kit": ["./src/index.ts"]
 		},
 		"types": ["@cloudflare/workers-types", "node"]
 	},

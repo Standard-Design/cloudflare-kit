@@ -1,6 +1,7 @@
 /**
  * Connects per-execution bindings to explicit helpers and optional scoped access.
  * Keep this module server-side; each installed copy owns its own async store.
+ * Reworked from Sawkill's EdgeKit-derived utilities; see THIRD_PARTY_NOTICES.md.
  * @see docs/request-context.md
  * @see docs/explicit-injection.md
  */

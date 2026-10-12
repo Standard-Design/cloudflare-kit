@@ -8,8 +8,11 @@ needs as a parameter, so its dependencies are visible and replaceable in tests.
 ## Pass a small capability
 
 ```ts
-import { createKvCache, type KvCache } from '@standard/cloudflare-kit/kv-cache'
-import type { KvNamespaceLike } from '@standard/cloudflare-kit/kv'
+import {
+	createKvCache,
+	type KvCache,
+} from '@standard-design/cloudflare-kit/kv-cache'
+import type { KvNamespaceLike } from '@standard-design/cloudflare-kit/kv'
 
 export async function loadTitle(dataCache: Pick<KvCache, 'getOrSet'>) {
 	return dataCache.getOrSet('title', () => 'Public catalog')
@@ -37,7 +40,7 @@ import {
 	type CloudflareKitContext,
 	type KvNamespaceLike,
 	type WaitUntilContext,
-} from '@standard/cloudflare-kit'
+} from '@standard-design/cloudflare-kit'
 
 type Bindings = { CONTENT_CACHE: KvNamespaceLike; SITE_NAME: string }
 

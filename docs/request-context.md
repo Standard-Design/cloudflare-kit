@@ -1,6 +1,6 @@
 # Request context and global access
 
-Import from `@standard/cloudflare-kit` or `/context` in server-only code.
+Import from `@standard-design/cloudflare-kit` or `/context` in server-only code.
 `runWithCloudflareKit()` lets a helper in another file call `env()`, `kv()`, or
 `cache()` without receiving a kit parameter. It uses AsyncLocalStorage to attach
 one context to an asynchronous call chain. It does not store the current request
@@ -14,7 +14,7 @@ import {
 	runWithCloudflareKit,
 	type KvNamespaceLike,
 	type WaitUntilContext,
-} from '@standard/cloudflare-kit'
+} from '@standard-design/cloudflare-kit'
 
 // This helper can live in another server module.
 async function readWelcomeMessage() {
@@ -74,7 +74,7 @@ Worker runtime to keep that work alive after the response. Use `waitUntil` for
 noncritical work that may finish later:
 
 ```ts
-import { kv, waitUntil } from '@standard/cloudflare-kit'
+import { kv, waitUntil } from '@standard-design/cloudflare-kit'
 
 export function saveNoncriticalMetric(key: string, value: number) {
 	// Call inside a request scope; handle background failures in the application.

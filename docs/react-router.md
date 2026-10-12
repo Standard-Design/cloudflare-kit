@@ -20,7 +20,7 @@ import {
 	type CloudflareKitContext,
 	type KvNamespaceLike,
 	type WaitUntilContext,
-} from '@standard/cloudflare-kit'
+} from '@standard-design/cloudflare-kit'
 
 type Bindings = { CONTENT_CACHE: KvNamespaceLike }
 // Export from app/platform/context.ts in an application.
@@ -71,7 +71,7 @@ on that request's server call chain may use:
 
 ```ts illustrative
 // app/products.server.ts; loadProducts is the application's validated data fetch.
-import { cache } from '@standard/cloudflare-kit'
+import { cache } from '@standard-design/cloudflare-kit'
 
 export function readProducts(preview: boolean) {
 	return cache('CONTENT_CACHE', { prefix: 'production:products:v1' }).getOrSet(
@@ -99,8 +99,8 @@ app elects to cache only known public document routes:
 import {
 	runWithCloudflareKit,
 	type WaitUntilContext,
-} from '@standard/cloudflare-kit'
-import type { CacheStorageLike } from '@standard/cloudflare-kit/http-cache'
+} from '@standard-design/cloudflare-kit'
+import type { CacheStorageLike } from '@standard-design/cloudflare-kit/http-cache'
 
 export function serveDocuments(
 	request: Request,

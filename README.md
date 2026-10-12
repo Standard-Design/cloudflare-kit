@@ -1,4 +1,4 @@
-# `@standard/cloudflare-kit`
+# `@standard-design/cloudflare-kit`
 
 Typed, framework-independent utilities for Cloudflare Workers bindings, Workers
 KV, request-local context, KV-backed data caching, and the Cache API.
@@ -12,12 +12,13 @@ cache policy, and Workers-runtime tests.
 For the full explanation, start with the [documentation index](docs/README.md).
 It includes a recommended reading order, shared terminology, subsystem guides,
 and application ownership and verification boundaries. The expanded guides
-and API comments are included in alpha.1 builds; the original alpha.0 release
+and API comments are included starting with alpha.1; the original alpha.0 release
 remains unchanged.
 
 ## Table of contents
 
 - [Status and installation](#status-and-installation)
+  - [Migrating from the old scope](#migrating-from-the-old-scope)
 - [Requirements](#requirements)
 - [Request context](#request-context)
   - [Type global accessors once](#type-global-accessors-once)
@@ -38,17 +39,31 @@ remains unchanged.
 
 ## Status and installation
 
-`0.1.0-alpha.1` is the next prerelease being prepared, not yet a published
-artifact. The commands below target it once released; until then, use the
-existing alpha.0 release. Use an exact packed artifact or Git tag while
-the package is being integrated into Standard Stack. Do not use a floating
-branch as a dependency.
+This source targets `@standard-design/cloudflare-kit@0.1.0-alpha.2`, the first
+prerelease under the `standard-design` npm organization. It includes the corrected
+Standard Design LLC copyright holder and third-party notices. Runtime APIs are
+unchanged; imports must use the new scope.
+
+Public npm publication is prepared, not automatic. After the reviewed version
+has been published to npm, install it with:
+
+```sh
+pnpm add @standard-design/cloudflare-kit@0.1.0-alpha.2
+```
+
+Check npm or [GitHub releases](https://github.com/Standard-Design/cloudflare-kit/releases)
+for availability before installing. A source version bump or successful dry run
+does not publish a release. Historical alpha.0 and alpha.1 GitHub artifacts use
+`@standard/cloudflare-kit` and retain their original names, notices, and checksums.
+
+Use an exact packed artifact or Git tag while the package is being integrated
+into Standard Stack. Do not use a floating branch as a dependency.
 
 The packed tarball is the simplest initial integration artifact because it
 contains compiled output and does not run dependency build scripts:
 
 ```sh
-pnpm add ./standard-cloudflare-kit-0.1.0-alpha.1.tgz
+pnpm add ./standard-design-cloudflare-kit-0.1.0-alpha.2.tgz
 ```
 
 For this private repository, download release assets through authenticated
@@ -58,13 +73,25 @@ An exact Git tag also works because the package builds during Git dependency
 preparation:
 
 ```sh
-pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.1
+pnpm add github:Standard-Design/cloudflare-kit#v0.1.0-alpha.2
 ```
 
 pnpm may require the consuming project to allow that Git dependency's build in
 `pnpm-workspace.yaml`. Follow the exact `allowBuilds` entry printed by pnpm, or
-use the packed tarball to avoid dependency build scripts. See pnpm's
+use npm or the packed tarball to avoid dependency build scripts. See pnpm's
 [`allowBuilds` setting](https://pnpm.io/settings#allowbuilds).
+
+### Migrating from the old scope
+
+Replace the old dependency with `@standard-design/cloudflare-kit`, update every
+import (including subpaths) and `declare module` augmentation, and regenerate
+the application's lockfile. The repository URL and export subpaths are unchanged.
+There is no compatibility package or alias at `@standard/cloudflare-kit`.
+
+Do not install both identities or mix their accessors: each installed copy owns
+its own AsyncLocalStorage instance, so a scope entered through one package does
+not activate the other. Keep existing working pins until the new release is
+available. See [scope migration](docs/prerelease.md#scope-migration) for details.
 
 ## Requirements
 
@@ -97,7 +124,11 @@ deeper server code can import request-scoped capabilities without threading an
 object through every function signature.
 
 ```ts
-import { cache, env, runWithCloudflareKit } from '@standard/cloudflare-kit'
+import {
+	cache,
+	env,
+	runWithCloudflareKit,
+} from '@standard-design/cloudflare-kit'
 
 export default {
 	fetch(request, workerEnv, ctx) {
@@ -128,9 +159,9 @@ silently sharing state between requests.
 Merge the generated Worker `Env` into the package once:
 
 ```ts
-import '@standard/cloudflare-kit'
+import '@standard-design/cloudflare-kit'
 
-declare module '@standard/cloudflare-kit' {
+declare module '@standard-design/cloudflare-kit' {
 	interface CloudflareKitBindings extends Env {}
 }
 ```
@@ -163,7 +194,7 @@ import {
 	createCloudflareKit,
 	createKvCache,
 	createKvStore,
-} from '@standard/cloudflare-kit'
+} from '@standard-design/cloudflare-kit'
 
 const cloudflare = createCloudflareKit({ env, ctx, request })
 const store = createKvStore(env.CONTENT_KV)
@@ -184,7 +215,7 @@ actions, or middleware prefer explicit access:
 import {
 	runWithCloudflareKit,
 	type CloudflareKitContext,
-} from '@standard/cloudflare-kit'
+} from '@standard-design/cloudflare-kit'
 import {
 	createContext,
 	createRequestHandler,
@@ -212,7 +243,7 @@ export default {
 A loader in another file can choose either style:
 
 ```ts
-import { cache } from '@standard/cloudflare-kit'
+import { cache } from '@standard-design/cloudflare-kit'
 import type { Route } from './+types/products'
 import { cloudflareContext } from '~/platform/cloudflare'
 
@@ -279,7 +310,7 @@ Values can be validated with any synchronous parser. Cloudflare Kit does not
 depend on a schema library:
 
 ```ts
-import { kv } from '@standard/cloudflare-kit'
+import { kv } from '@standard-design/cloudflare-kit'
 import * as z from 'zod'
 
 const SettingsSchema = z.object({
@@ -314,7 +345,7 @@ The context method injects the current execution context. The standalone
 subpath export accepts it explicitly:
 
 ```ts
-import { withHttpCache } from '@standard/cloudflare-kit/http-cache'
+import { withHttpCache } from '@standard-design/cloudflare-kit/http-cache'
 
 return withHttpCache({
 	cache: caches.default,
@@ -440,16 +471,16 @@ for platform-level behavior.
 
 ## Package entry points
 
-| Entry point                             | Purpose                              |
-| --------------------------------------- | ------------------------------------ |
-| `@standard/cloudflare-kit`              | Complete public API                  |
-| `@standard/cloudflare-kit/context`      | Request context and global accessors |
-| `@standard/cloudflare-kit/env`          | Binding reader                       |
-| `@standard/cloudflare-kit/kv`           | General Workers KV store             |
-| `@standard/cloudflare-kit/kv-cache`     | KV-backed data cache                 |
-| `@standard/cloudflare-kit/http-cache`   | HTTP Cache API orchestration         |
-| `@standard/cloudflare-kit/types`        | Shared JSON and parser types         |
-| `@standard/cloudflare-kit/package.json` | Package metadata                     |
+| Entry point                                    | Purpose                              |
+| ---------------------------------------------- | ------------------------------------ |
+| `@standard-design/cloudflare-kit`              | Complete public API                  |
+| `@standard-design/cloudflare-kit/context`      | Request context and global accessors |
+| `@standard-design/cloudflare-kit/env`          | Binding reader                       |
+| `@standard-design/cloudflare-kit/kv`           | General Workers KV store             |
+| `@standard-design/cloudflare-kit/kv-cache`     | KV-backed data cache                 |
+| `@standard-design/cloudflare-kit/http-cache`   | HTTP Cache API orchestration         |
+| `@standard-design/cloudflare-kit/types`        | Shared JSON and parser types         |
+| `@standard-design/cloudflare-kit/package.json` | Package metadata                     |
 
 Subpath imports let libraries depend on individual primitives. The scoped
 context exposes the complete capability facade, but each helper is lazy.
@@ -477,12 +508,12 @@ pnpm verify
 
 Verification includes Wrangler type generation, formatting, linting, strict
 package and consumer typechecks, Workers-runtime tests, production builds,
-an `npm publish ./dist --dry-run --tag alpha`, `publint`, Are the Types Wrong analysis,
+an `npm publish ./dist --dry-run --access public --tag alpha`, `publint`, Are the Types Wrong analysis,
 tarball-content assertions, and packed-consumer smoke tests.
 
 The build assembles `dist/` as a self-contained package root containing only
 compiled JavaScript, declarations with API comments, package metadata, the
-README, the license, and the Markdown guides in `docs/`. Source maps are omitted
+README, LICENSE, THIRD_PARTY_NOTICES.md, and the Markdown guides in `docs/`. Source maps are omitted
 so the package cannot embed TypeScript through `sourcesContent`. See
 [packaging and verification](docs/prerelease.md) for the release sequence and
 the limits of the automated checks.
@@ -495,8 +526,13 @@ pnpm release:pack
 
 Publishing the repository root is intentionally blocked. A future npm release
 must use `pnpm release:publish`, which builds and publishes `./dist` explicitly
-under the `alpha` npm distribution tag.
+with explicit public access under the `alpha` npm distribution tag. The generated
+manifest also fixes the public npm registry, access, and tag through `publishConfig`.
+Publishing requires separate approval and authorized npm authentication; CI only
+verifies the package. See the [readiness checklist](docs/prerelease.md#npm-publication-readiness).
 
 ## License
 
-MIT
+MIT; see [LICENSE](LICENSE) for first-party terms and
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the retained EdgeKit and
+Type-Fest notices and the focused attribution audit.

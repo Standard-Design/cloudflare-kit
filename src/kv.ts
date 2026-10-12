@@ -1,4 +1,5 @@
 /** JSON storage without cache envelopes or automatic prefixes. @see docs/kv.md */
+/** EdgeKit-derived lineage via Sawkill; see THIRD_PARTY_NOTICES.md. */
 import type { JsonObject, JsonValue, Parser } from './types.js'
 import { assertValidKvExpirationTtl } from './kv-ttl.js'
 

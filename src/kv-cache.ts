@@ -1,4 +1,5 @@
 /** Read-through JSON caching over KV, separate from HTTP response caching. @see docs/kv-cache.md */
+/** EdgeKit-derived lineage via Sawkill; see THIRD_PARTY_NOTICES.md. */
 import { InvalidCacheEntryError } from './errors.js'
 import type { KvNamespaceLike, KvPutOptions } from './kv.js'
 import { assertValidKvExpirationTtl } from './kv-ttl.js'

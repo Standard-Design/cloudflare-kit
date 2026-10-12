@@ -42,6 +42,11 @@ try {
 
 	const filename = packResult[0]?.filename
 	assert.equal(typeof filename, 'string')
+	assert.equal(
+		filename,
+		`standard-design-cloudflare-kit-${sourceManifest.version}.tgz`,
+	)
+	assert.equal(packResult[0]?.name, '@standard-design/cloudflare-kit')
 	const packedFiles = packResult[0]?.files?.map((file) => file.path)
 	assert.ok(Array.isArray(packedFiles))
 	for (const [subpath, target] of Object.entries(packageManifest.exports)) {
@@ -57,6 +62,7 @@ try {
 		)
 	}
 	assert.ok(packedFiles.includes('LICENSE'))
+	assert.ok(packedFiles.includes('THIRD_PARTY_NOTICES.md'))
 	assert.ok(packedFiles.includes('README.md'))
 	assert.ok(packedFiles.includes('package.json'))
 	const guides = (await readdir(join(projectDirectory, 'docs')))
@@ -82,6 +88,7 @@ try {
 	const expectedFiles = [
 		'LICENSE',
 		'README.md',
+		'THIRD_PARTY_NOTICES.md',
 		'package.json',
 		...guides.map((name) => `docs/${name}`),
 		...sourceFiles.flatMap((name) => [
@@ -101,6 +108,14 @@ try {
 	assert.equal(packageManifest.devDependencies, undefined)
 	assert.equal(packageManifest.files, undefined)
 	assert.equal(packageManifest.packageManager, undefined)
+	assert.equal(packageManifest.private, undefined)
+	assert.equal(packageManifest.dependencies, undefined)
+	assert.equal(packageManifest.peerDependencies, undefined)
+	assert.deepEqual(packageManifest.publishConfig, {
+		access: 'public',
+		registry: 'https://registry.npmjs.org/',
+		tag: 'alpha',
+	})
 	const tarball = join(temporaryDirectory, filename)
 	const consumerDirectory = join(temporaryDirectory, 'consumer')
 
@@ -128,12 +143,14 @@ try {
 
 	const smokeTest = `
 import assert from 'node:assert/strict'
-import * as main from '@standard/cloudflare-kit'
-import * as context from '@standard/cloudflare-kit/context'
-import * as env from '@standard/cloudflare-kit/env'
-import * as httpCache from '@standard/cloudflare-kit/http-cache'
-import * as kv from '@standard/cloudflare-kit/kv'
-import * as kvCache from '@standard/cloudflare-kit/kv-cache'
+import * as main from '@standard-design/cloudflare-kit'
+import * as context from '@standard-design/cloudflare-kit/context'
+import * as env from '@standard-design/cloudflare-kit/env'
+import * as httpCache from '@standard-design/cloudflare-kit/http-cache'
+import * as kv from '@standard-design/cloudflare-kit/kv'
+import * as kvCache from '@standard-design/cloudflare-kit/kv-cache'
+import * as types from '@standard-design/cloudflare-kit/types'
+import metadata from '@standard-design/cloudflare-kit/package.json' with { type: 'json' }
 
 assert.equal(typeof main.createCloudflareKit, 'function')
 assert.equal(typeof context.createCloudflareKit, 'function')
@@ -141,6 +158,16 @@ assert.equal(typeof env.createEnvironment, 'function')
 assert.equal(typeof httpCache.withHttpCache, 'function')
 assert.equal(typeof kv.createKvStore, 'function')
 assert.equal(typeof kvCache.createKvCache, 'function')
+assert.deepEqual(Object.keys(types), [])
+assert.equal(metadata.name, '@standard-design/cloudflare-kit')
+assert.equal(metadata.publishConfig.access, 'public')
+assert.equal(metadata.publishConfig.tag, 'alpha')
+await main.runWithCloudflareKit({ env: { COUNT: 0 }, ctx: { waitUntil() {} } }, async (kit) => {
+  await Promise.resolve()
+  assert.equal(context.getCloudflareKit(), kit)
+  assert.equal(main.env().require('COUNT'), 0)
+})
+assert.throws(() => context.getCloudflareKit(), main.CloudflareKitContextError)
 `
 	await writeFile(join(consumerDirectory, 'smoke.mjs'), smokeTest)
 	await exec(process.execPath, ['smoke.mjs'], { cwd: consumerDirectory })
@@ -148,17 +175,19 @@ assert.equal(typeof kvCache.createKvCache, 'function')
 	const installedPackage = join(
 		consumerDirectory,
 		'node_modules',
-		'@standard',
+		'@standard-design',
 		'cloudflare-kit',
 		'package.json',
 	)
 	const manifest = JSON.parse(await readFile(installedPackage, 'utf8'))
-	assert.equal(manifest.name, '@standard/cloudflare-kit')
+	assert.equal(manifest.name, '@standard-design/cloudflare-kit')
 	assert.equal(manifest.version, sourceManifest.version)
+	assert.deepEqual(manifest.publishConfig, packageManifest.publishConfig)
 	const installedDirectory = dirname(installedPackage)
 	for (const file of [
 		'LICENSE',
 		'README.md',
+		'THIRD_PARTY_NOTICES.md',
 		...guides.map((name) => `docs/${name}`),
 	]) {
 		assert.equal(
@@ -167,9 +196,28 @@ assert.equal(typeof kvCache.createKvCache, 'function')
 			`Packed document differs: ${file}`,
 		)
 	}
+	assert.ok(
+		(await readFile(join(installedDirectory, 'LICENSE'), 'utf8')).includes(
+			'Copyright (c) 2026 Standard Design LLC',
+		),
+	)
+	const notices = await readFile(
+		join(installedDirectory, 'THIRD_PARTY_NOTICES.md'),
+		'utf8',
+	)
+	for (const holder of [
+		'Copyright (c) 2024 Sergio Xalambrí',
+		'Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)',
+	]) {
+		assert.ok(notices.includes(holder), `Missing third-party holder: ${holder}`)
+	}
 
 	// Check relative links in the shipped layout, where src/ and test/ do not exist.
-	for (const file of ['README.md', ...guides.map((name) => `docs/${name}`)]) {
+	for (const file of [
+		'README.md',
+		'THIRD_PARTY_NOTICES.md',
+		...guides.map((name) => `docs/${name}`),
+	]) {
 		const markdown = await readFile(join(installedDirectory, file), 'utf8')
 		for (const match of markdown.matchAll(/\]\(([^)]+)\)/g)) {
 			const target = match[1]
@@ -238,6 +286,32 @@ assert.equal(typeof kvCache.createKvCache, 'function')
 		}
 	}
 	assert.ok(coreExamples.length > 0 && routerExamples.length > 0)
+	const guideExampleCount = coreExamples.length + routerExamples.length
+	// Check augmentation against the installed new identity, not a source path alias.
+	const augmentationFixture = `
+import { bindings, env, kv, type CloudflareKitBindings } from '@standard-design/cloudflare-kit'
+import type { KvNamespaceLike } from '@standard-design/cloudflare-kit/kv'
+declare module '@standard-design/cloudflare-kit' {
+  interface CloudflareKitBindings {
+    COUNT: number
+    OPTIONAL?: string
+    TEST_KV: KvNamespaceLike
+  }
+}
+bindings().COUNT satisfies number
+env().require('COUNT') satisfies number
+env().optional('OPTIONAL') satisfies string | undefined
+kv('TEST_KV')
+// @ts-expect-error Unknown binding names must not be accepted.
+env().require('UNKNOWN')
+// @ts-expect-error Non-KV bindings must not be accepted as KV names.
+kv<CloudflareKitBindings>('COUNT')
+`
+	await writeFile(
+		join(exampleDirectory, 'scope-augmentation.ts'),
+		augmentationFixture,
+	)
+	coreExamples.push('examples/scope-augmentation.ts')
 	// Reuse the development router only for integration typings; it is not a kit dependency.
 	await symlink(
 		join(projectDirectory, 'node_modules', 'react-router'),
@@ -274,7 +348,7 @@ assert.equal(typeof kvCache.createKvCache, 'function')
 		)
 	}
 	process.stdout.write(
-		`Verified ${packedFiles.length} packed files, ${guides.length} guides, and ${coreExamples.length + routerExamples.length} typed guide examples.\n`,
+		`Verified ${packedFiles.length} packed files, ${guides.length} guides, ${guideExampleCount} typed guide examples, and the scoped augmentation fixture.\n`,
 	)
 } finally {
 	await rm(temporaryDirectory, { force: true, recursive: true })

@@ -1,9 +1,13 @@
 import { createContext } from 'react-router'
 
 import {
+	bindings,
 	createCloudflareKit,
+	env as scopedEnvironment,
+	kv,
+	type CloudflareKitBindings,
 	type CloudflareKitContext,
-} from '@standard/cloudflare-kit'
+} from '@standard-design/cloudflare-kit'
 
 interface WorkerEnv {
 	COUNT: number
@@ -11,6 +15,18 @@ interface WorkerEnv {
 	OPTIONAL?: string
 	TEST_KV: KVNamespace
 }
+
+declare module '@standard-design/cloudflare-kit' {
+	interface CloudflareKitBindings extends WorkerEnv {}
+}
+
+bindings().COUNT satisfies number
+scopedEnvironment().optional('OPTIONAL') satisfies string | undefined
+kv('TEST_KV')
+// @ts-expect-error Unknown bindings must be rejected by module augmentation.
+scopedEnvironment().require('UNKNOWN')
+// @ts-expect-error Known non-KV bindings must not be accepted as KV names.
+kv<CloudflareKitBindings>('COUNT')
 
 declare const env: WorkerEnv
 declare const ctx: ExecutionContext
