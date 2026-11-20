@@ -60,7 +60,7 @@
 	"engines": {
 		"node": ">=24.0.0"
 	},
-	"packageManager": "pnpm@11.26.0",
+	"packageManager": "pnpm@11.28.12",
 	"scripts": {
 		"prebuild": "node scripts/clean-dist.mjs",
 		"build": "tsc -p tsconfig.build.json",
@@ -82,18 +82,18 @@
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.18.5",
-		"@cloudflare/workers-types": "^5.20260919.1",
-		"@cloudflare/vitest-plugin": "^1.1.13",
+		"@cloudflare/workers-types": "^5.20261120.1",
+		"@cloudflare/vitest-plugin": "^1.9.0",
 		"@eslint/js": "^10.0.1",
-		"@types/node": "^24.10.0",
-		"eslint": "^10.11.0",
+		"@types/node": "^24.19.2",
+		"eslint": "^10.15.0",
 		"eslint-config-prettier": "^10.1.8",
-		"prettier": "^3.9.8",
-		"publint": "^0.3.24",
-		"react-router": "^8.4.0",
+		"prettier": "^3.10.1",
+		"publint": "^0.3.25",
+		"react-router": "^8.5.2",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.70.0",
-		"vitest": "^4.1.11",
-		"wrangler": "^4.135.0"
+		"typescript-eslint": "^8.73.0",
+		"vitest": "^4.1.12",
+		"wrangler": "^4.166.0"
 	}
 }

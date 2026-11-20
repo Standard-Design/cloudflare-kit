@@ -155,7 +155,7 @@ A dry run checks packaging; it does not authenticate or prove publish rights.
 
 ## What verification proves
 
-Use Node 24+ and the manifest-pinned pnpm version (currently 11.26.0):
+Use Node 24+ and the manifest-pinned pnpm version (currently 11.28.12):
 
 ```sh
 pnpm install --frozen-lockfile
